@@ -4,31 +4,57 @@ import { config } from "../config"
 const BALL_SIZE = 48
 const BALL_SCALE_INITIAL = 4
 const BALL_SCALE_FINAL = 1
-const BALL_RADIUS = 48 / 2
+const BALL_RADIUS = 18 * config.SPRITE_SCALE / 2
 const BALL_SPEED = 2
 const BALL_FLY_TIME = .5
-const BALL_H_PADDING = 64
-const BALL_V_PADDING = 32
+const BALL_H_PADDING = 4
+const BALL_V_PADDING = 2
 const BALL_Y = config.GAME_HEIGHT - BALL_V_PADDING
 const BALL_MIN_X = BALL_H_PADDING
 const BALL_MAX_X = config.GAME_WIDTH - BALL_H_PADDING
 const BALL_STRENGTH_CHANGE_SPEED = 1
-const HOLE_RADIUS = BALL_RADIUS * 3 // 1.5
+const HOLE_RADIUS = BALL_RADIUS * 2.5
 const GRAVITY = 9
 const UI_BAR_HEIGHT = config.GAME_HEIGHT / 2
 const UI_BAR_WIDTH = 24
+const CLOWN_SPRITE_HEIGHT = 144 * config.SPRITE_SCALE
+const CLOWN_SPRITE_WIDTH = 160 * config.SPRITE_SCALE
 
 export const makeScenePalhaco = (k: KaboomCtx) => () => {
     const game = k.add([
         k.timer(),
     ])
+
+    k.setBackground(k.Color.fromHex("#3e375c"))
     
     const hole = game.add([
         k.pos(k.center()),
         k.anchor("center"),
         k.circle(HOLE_RADIUS),
         k.color(k.BLACK),
-        k.area()
+        k.area(),
+        k.opacity(0)
+        // k.z(100),
+    ])
+
+    const clown = game.add([
+        k.pos(k.center()),
+        k.sprite("clown", {
+            height: CLOWN_SPRITE_HEIGHT,
+            width: CLOWN_SPRITE_WIDTH
+        }),
+        k.anchor("center"),
+        k.z(2)
+    ])
+
+    game.add([
+        k.pos(k.center()),
+        k.sprite("clown-bg", {
+            height: CLOWN_SPRITE_HEIGHT,
+            width: CLOWN_SPRITE_WIDTH
+        }),
+        k.anchor("center"),
+        k.z(1)
     ])
     
     const strengthBar = game.add([
@@ -56,14 +82,15 @@ export const makeScenePalhaco = (k: KaboomCtx) => () => {
     
     const addBall = () => {
         return game.add([
-            k.sprite("circle", {
-                width: BALL_SIZE,
-                height: BALL_SIZE
+            k.sprite("ball", {
+                width: 18 * config.SPRITE_SCALE,
+                height: 18 * config.SPRITE_SCALE
             }),
             k.scale(BALL_SCALE_INITIAL),
             k.pos(BALL_MIN_X, BALL_Y),
             k.anchor("center"),
             k.area(),
+            k.z(2),
             {
                 reset() {
                     this.scale = k.vec2(BALL_SCALE_INITIAL)

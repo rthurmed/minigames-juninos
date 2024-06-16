@@ -1,4 +1,7 @@
 export const config = {
-    GAME_WIDTH: 800,
-    GAME_HEIGHT: 600
+    SPRITE_SCALE: 5,
+    INTERNAL_WIDTH: 128, 
+    INTERNAL_HEIGHT: 112,
+    GAME_WIDTH: 128 * 5, // 640
+    GAME_HEIGHT: 112 * 5, // 560
 }

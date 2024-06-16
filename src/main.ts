@@ -12,6 +12,12 @@ const k = startGame({
 
 k.loadSprite("circle", "sprites/kaboom/circle.png")
 k.loadSprite("egg", "sprites/kaboom/egg.png")
+k.loadSprite("ball", "sprites/ball.png")
+k.loadSprite("clown-bg", "sprites/clown-bg.png")
+k.loadSprite("clown", "sprites/clown-Sheet.png", {
+	sliceX: 3,
+	sliceY: 1,
+})
 
 k.scene("palhaco", makeScenePalhaco(k))
 k.scene("burro", makeSceneBurro(k))
@@ -44,4 +50,5 @@ k.scene("main", () => {
 	}
 })
 
-k.go("main")
+// k.go("main")
+k.go("palhaco")
