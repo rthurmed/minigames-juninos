@@ -51,7 +51,7 @@ export const makeSceneBurro = (k: KaboomCtx) => () => {
         tail.pos = k.lerp(tail.pos, target, k.dt() * 8)
     })
 
-    const input = game.onMouseDown("left", () => {
+    const input = game.onMousePress("left", () => {
         tailPoint.opacity = 1
         tailPoint.z = 2
         targetPoint.z = 2
