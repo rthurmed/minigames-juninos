@@ -10,8 +10,8 @@ const k = startGame({
 	letterbox: true
 })
 
-k.loadSprite("circle", "sprites/circle.png")
-k.loadSprite("egg", "sprites/egg.png")
+k.loadSprite("circle", "sprites/kaboom/circle.png")
+k.loadSprite("egg", "sprites/kaboom/egg.png")
 
 k.scene("palhaco", makeScenePalhaco(k))
 k.scene("burro", makeSceneBurro(k))
