@@ -12,6 +12,29 @@ const k = startGame({
 	letterbox: true
 })
 
+// k.loadFont("kitchensink", "fonts/Kitchen Sink.ttf")
+k.loadBitmapFont("kitchensink", "fonts/kitchen-sink.png", 6, 8, {
+	chars: (
+		"█☺☻♥♦♣♠●○▪□■◘♪♫≡" +
+		"►◄⌂ÞÀß×¥↑↓→←◌●▼▲" +
+		" !\"#$%&'()*+,-./" +
+		"0123456789:;<=>?" +
+		"@ABCDEFGHIJKLMNO" +
+		"PQRSTUVWXYZ[\\]^_" +
+		"`abcdefghijklmno" +
+		"pqrstuvwxyz{|}~Χ" +
+		"░▒▓ḀḁḂ│┬┤┌┐ḃḄ┼ḅḆ" +
+		"ḇḈḉḊḋḌ─├┴└┘ḍḎ⁞ḏḐ" +
+		"ḑḒḓḔḕḖḗḘ▄ḙḚḛḜ…ḝḞ" +
+		"ḟḠḡḢḣḤḥḦ▌▐ḧḨḩḪḫḬ" +
+		"ḭḮḯḰḱḲḳḴḵḶḷḸḹḺḻḼ" +
+		"ḽḾḿṀṁṂṃṄṅṆṇṈṉṊṋṌ" +
+		"ṍṎṏṐṑṒṓṔṕṖṗṘṙṚṛṜ" +
+		"ṝṞṟṠṡṢṣṤṥṦṧṨṩṪṫṬ" +
+		"ṭṮṯṰṱṲṳṴṵṶṷṸṹṺṻṼ"
+	)
+})
+
 k.loadSprite("circle", "sprites/kaboom/circle.png")
 k.loadSprite("egg", "sprites/kaboom/egg.png")
 k.loadSprite("ball", "sprites/ball.png")

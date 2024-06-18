@@ -6,6 +6,14 @@ export const makeSceneSwitcher = (k: KaboomCtx) => () => {
 		"rabo",
 		"ovo"
 	]
+
+	const t = k.add([
+		k.pos(k.center()),
+		k.anchor("center"),
+		k.text("MiniGames Juninos", {
+			font: "kitchensink"
+		})
+	])
 	
 	const sceneSwitcher = k.add([
 		k.pos(16, k.height() - 16),
