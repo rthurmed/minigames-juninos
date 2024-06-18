@@ -3,6 +3,7 @@ import { config } from "./config"
 import { makeScenePalhaco } from "./games/palhaco"
 import { makeSceneBurro } from "./games/burro"
 import { makeSceneOvo } from "./games/ovo"
+import { makeSceneRabo } from "./games/rabo"
 import { makeSceneSwitcher } from "./switcher"
 
 const k = startGame({
@@ -23,7 +24,7 @@ k.loadSprite("clown", "sprites/clown-Sheet.png", {
 k.scene("palhaco", makeScenePalhaco(k))
 k.scene("burro", makeSceneBurro(k))
 k.scene("ovo", makeSceneOvo(k))
+k.scene("rabo", makeSceneRabo(k))
 k.scene("switcher", makeSceneSwitcher(k))
 
-// k.go("switcher")
-k.go("palhaco")
+k.go("switcher")

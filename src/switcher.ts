@@ -3,7 +3,7 @@ import { KaboomCtx } from "kaplay";
 export const makeSceneSwitcher = (k: KaboomCtx) => () => {
 	const scenes = [
 		"palhaco",
-		"burro",
+		"rabo",
 		"ovo"
 	]
 	
