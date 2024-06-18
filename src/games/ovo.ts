@@ -1,4 +1,5 @@
 import { KaboomCtx } from "kaplay";
+import { addBackButton } from "../gui/backButton";
 
 const EGG_SPEED_INCLINE = 3
 const EGG_SPEED_MOVEMENT = 2
@@ -10,6 +11,11 @@ export const makeSceneOvo = (k: KaboomCtx) => () => {
     const game = k.add([
         k.timer()
     ])
+
+    k.setBackground(k.Color.fromHex("#e14141"))
+
+    // HUD
+    const backButton = addBackButton(k)
 
     const player = game.add([
         k.state("walk", ["walk", "fall"])

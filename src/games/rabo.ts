@@ -1,5 +1,6 @@
 import { KaboomCtx, Vec2 } from "kaplay"
 import { config } from "../config"
+import { addBackButton } from "../gui/backButton"
 
 const POINT_RADIUS = 4
 const CURSOR_RADIUS = 4
@@ -15,6 +16,11 @@ export const makeSceneRabo = (k: KaboomCtx) => () => {
     const game = k.add([
         k.timer()
     ])
+
+    k.setBackground(k.Color.fromHex("#3898ff"))
+
+    // HUD
+    const backButton = addBackButton(k)
 
     const player = k.add([
         k.state("vertical", ["vertical", "horizontal", "moving", "ended"]),

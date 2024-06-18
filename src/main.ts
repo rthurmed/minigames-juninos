@@ -9,7 +9,8 @@ import { makeSceneSwitcher } from "./switcher"
 const k = startGame({
 	width: config.GAME_WIDTH,
 	height: config.GAME_HEIGHT,
-	letterbox: true
+	letterbox: true,
+	background: [0, 0, 0]
 })
 
 // k.loadFont("kitchensink", "fonts/Kitchen Sink.ttf")
