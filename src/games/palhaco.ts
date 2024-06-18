@@ -1,5 +1,8 @@
 import { KaboomCtx } from "kaplay"
 import { config } from "../config"
+import { addBackButton } from "../gui/backButton"
+
+const { PADDING, HUD_Z } = config
 
 const BALL_SIZE = 48
 const BALL_SCALE_INITIAL = 4
@@ -25,7 +28,18 @@ export const makeScenePalhaco = (k: KaboomCtx) => () => {
         k.timer(),
     ])
 
-    k.setBackground(k.Color.fromHex("#3e375c"))
+    k.setBackground(k.Color.fromHex("#ffbf36"))
+
+    // HUD
+    const backButton = addBackButton(k)
+    const pointsDisplay = game.add([
+        k.pos(k.width() - PADDING, PADDING),
+        k.anchor("topright"),
+        k.text("Pontos: 0", {
+            font: "kitchensink"
+        }),
+        k.z(HUD_Z)
+    ])
     
     const hole = game.add([
         k.pos(k.center()),
@@ -90,11 +104,12 @@ export const makeScenePalhaco = (k: KaboomCtx) => () => {
             k.pos(BALL_MIN_X, BALL_Y),
             k.anchor("center"),
             k.area(),
-            k.z(2),
+            k.z(3),
             {
                 reset() {
                     this.scale = k.vec2(BALL_SCALE_INITIAL)
                     this.pos = k.vec2(BALL_MIN_X, BALL_Y)
+                    this.z = 3
                 }
             }
         ])
@@ -184,7 +199,15 @@ export const makeScenePalhaco = (k: KaboomCtx) => () => {
     })
     
     player.onStateEnter("success", () => {
-        player.points = player.points + 1
-        player.enterState("move")
+        player.ball.z = 1
+        const update = game.onUpdate(() => {
+            player.ball.moveBy(0, GRAVITY)
+            if (player.ball.pos.y > k.height() + (BALL_RADIUS * 2)) {
+                update.cancel()
+                player.points = player.points + 1
+                pointsDisplay.text = "Pontos: " + player.points
+                player.enterState("move")
+            }
+        })
     })    
 }

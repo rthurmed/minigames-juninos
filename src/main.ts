@@ -48,6 +48,6 @@ k.scene("palhaco", makeScenePalhaco(k))
 k.scene("burro", makeSceneBurro(k))
 k.scene("ovo", makeSceneOvo(k))
 k.scene("rabo", makeSceneRabo(k))
-k.scene("switcher", makeSceneSwitcher(k))
+k.scene("main", makeSceneSwitcher(k))
 
-k.go("switcher")
+k.go("main")
