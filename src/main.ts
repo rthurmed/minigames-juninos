@@ -44,6 +44,14 @@ k.loadSprite("clown", "sprites/clown-Sheet.png", {
 	sliceX: 3,
 	sliceY: 1,
 })
+k.loadSprite("fish-box", "sprites/fish-box.png")
+k.loadSprite("fish-hook", "sprites/fish-hook.png")
+k.loadSprite("fish-cursor", "sprites/fish-cursor.png")
+k.loadSprite("fish-fish", "sprites/fish-fish.png", {
+	sliceX: 5,
+	sliceY: 1
+})
+
 
 k.scene("palhaco", makeScenePalhaco(k))
 k.scene("burro", makeSceneBurro(k))

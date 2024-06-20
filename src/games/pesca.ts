@@ -10,7 +10,7 @@ const CURSOR_MIN_Y = CURSOR_PADDING
 const CURSOR_MAX_Y = config.GAME_HEIGHT - CURSOR_PADDING
 const CURSOR_MIN_X = CURSOR_PADDING
 const CURSOR_MAX_X = config.GAME_WIDTH - CURSOR_PADDING
-const TAIL_MOVING_TIME = 1
+const TAIL_MOVING_TIME = 3
 
 export const makeScenePesca = (k: KaboomCtx) => () => {
     const game = k.add([
@@ -28,6 +28,15 @@ export const makeScenePesca = (k: KaboomCtx) => () => {
             target: k.vec2()
         }
     ])
+
+    const background = k.add([
+        k.sprite("fish-box", {
+            width: config.GAME_WIDTH,
+            height: config.GAME_HEIGHT
+        }),
+        k.pos(0, 0),
+        k.z(-1)
+    ])
     
     const point = game.add([
         k.pos(k.center()),
@@ -37,21 +46,23 @@ export const makeScenePesca = (k: KaboomCtx) => () => {
         k.z(2)
     ])
 
-    const tail = game.add([
-        k.pos(k.width()/2, k.height() + 16),
-        k.anchor("center"),
-        k.circle(POINT_RADIUS * 8),
-        k.color(k.BLUE),
+    const hook = game.add([
+        k.sprite("fish-hook", {
+            width: 24 * config.SPRITE_SCALE,
+            height: 112 * config.SPRITE_SCALE
+        }),
+        k.pos(k.width()/2, - 16),
+        k.anchor("bot"),
         k.z(0)
     ])
 
-    tail.add([
-        k.pos(),
-        k.anchor("center"),
-        k.circle(POINT_RADIUS),
-        k.color(k.BLACK),
-        k.z(0)
-    ])
+    // const hookPoint = hook.add([
+    //     k.pos(),
+    //     k.anchor("center"),
+    //     k.circle(POINT_RADIUS),
+    //     k.color(k.BLACK),
+    //     k.z(0)
+    // ])
 
     player.onStateEnter("vertical", () => {
         let direction = 1
@@ -99,11 +110,11 @@ export const makeScenePesca = (k: KaboomCtx) => () => {
 
     player.onStateEnter("moving", () => {
         game.tween(
-            tail.pos,
+            hook.pos,
             player.target,
             TAIL_MOVING_TIME,
             (value) => {
-                tail.pos = value
+                hook.pos = value
             },
             k.easings.easeInOutElastic
         )
