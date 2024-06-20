@@ -1,12 +1,6 @@
 import { KaboomCtx } from "kaplay";
 
-export const makeSceneSwitcher = (k: KaboomCtx) => () => {
-	const scenes = [
-		"palhaco",
-		"rabo",
-		"ovo"
-	]
-
+export const makeSceneSwitcher = (k: KaboomCtx, scenes: string[]) => () => {
 	const t = k.add([
 		k.pos(k.center()),
 		k.anchor("center"),

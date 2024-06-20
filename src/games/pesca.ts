@@ -12,7 +12,7 @@ const CURSOR_MIN_X = CURSOR_PADDING
 const CURSOR_MAX_X = config.GAME_WIDTH - CURSOR_PADDING
 const TAIL_MOVING_TIME = 1
 
-export const makeSceneRabo = (k: KaboomCtx) => () => {
+export const makeScenePesca = (k: KaboomCtx) => () => {
     const game = k.add([
         k.timer()
     ])
