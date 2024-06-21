@@ -205,6 +205,7 @@ export const makeScenePesca = (k: KaboomCtx) => () => {
                 const distance = fish.hookPoint.dist(hookPoint.worldPos())
                 if (distance < HOOK_MIN_DISTANCE) {
                     player.hooked = fish
+                    fishes.splice(i, 1)
                     break
                 }
             }
