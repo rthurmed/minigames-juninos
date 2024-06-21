@@ -11,7 +11,7 @@ const CURSOR_MAX_Y = config.GAME_HEIGHT / 2 + 32
 const CURSOR_MIN_X = CURSOR_PADDING
 const CURSOR_MAX_X = config.GAME_WIDTH - CURSOR_PADDING
 const HOOK_MOVING_TIME = 3
-const HOOK_MIN_DISTANCE = 8 * config.SPRITE_SCALE
+const HOOK_MIN_DISTANCE = 6 * config.SPRITE_SCALE
 const Z_FISH = 10
 const Z_HOOK = 50
 const Z_DEBUG = 100
@@ -28,14 +28,41 @@ export const makeScenePesca = (k: KaboomCtx) => () => {
     // HUD
     const backButton = addBackButton(k)
 
+    const labelActiveColor = k.Color.fromHex("#ffbf36")
+    const labelInactiveColor = k.Color.fromHex("#FFFFFF")
+
+    const labelPointsP1 = k.add([
+        k.pos(config.PADDING, k.height() - config.PADDING),
+        k.anchor("botleft"),
+        k.text("P1 0", {
+            font: "kitchensink"
+        }),
+        k.color(labelInactiveColor)
+    ])
+    const labelPointsP2 = k.add([
+        k.pos(k.width() - config.PADDING, k.height() - config.PADDING),
+        k.anchor("botright"),
+        k.text("0 P2", {
+            font: "kitchensink"
+        }),
+        k.color(labelInactiveColor)
+
+    ])
+
     const player = k.add([
         k.state("vertical", ["vertical", "horizontal", "moving", "pulling", "ended"]),
         {
             target: k.vec2(),
-            hooked: undefined
+            hooked: undefined,
+            playerOne: false,
+            pointsP1: 0,
+            pointsP2: 0,
         } as {
             target: Vec2,
             hooked?: FishObj
+            playerOne: boolean,
+            pointsP1: number,
+            pointsP2: number,
         }
     ])
 
@@ -121,10 +148,16 @@ export const makeScenePesca = (k: KaboomCtx) => () => {
         }),
         k.rotate(-90),
         k.anchor("left"),
-        k.pos(CURSOR_MIN_X, k.height() - CURSOR_PADDING)
+        k.pos(CURSOR_MIN_X, k.height() - CURSOR_PADDING * 4)
     ])
 
+    // initial
     player.onStateEnter("vertical", () => {
+        player.playerOne = !player.playerOne
+
+        labelPointsP1.color = player.playerOne ? labelActiveColor : labelInactiveColor
+        labelPointsP2.color = !player.playerOne ? labelActiveColor : labelInactiveColor
+        
         let direction = 1
         const movement = game.onUpdate(() => {
             verticalCursor.moveBy(k.DOWN.scale(CURSOR_SPEED * direction))
@@ -169,7 +202,7 @@ export const makeScenePesca = (k: KaboomCtx) => () => {
         tween.onEnd(() => {
             for (let i = 0; i < fishes.length; i++) {
                 const fish = fishes[i];
-                const distance = fish.hookPoint.dist(player.target)
+                const distance = fish.hookPoint.dist(hookPoint.worldPos())
                 if (distance < HOOK_MIN_DISTANCE) {
                     player.hooked = fish
                     break
@@ -206,7 +239,17 @@ export const makeScenePesca = (k: KaboomCtx) => () => {
             k.easings.easeOutElastic
         )
         tween.onEnd(() => {
+            // update points
+            if (player.playerOne) {
+                player.pointsP1 += 1
+                labelPointsP1.text = `P1 ${player.pointsP1}`
+            } else {
+                player.pointsP2 += 1
+                labelPointsP2.text = `${player.pointsP2} P2`
+            }
+
             player.enterState("vertical")
+            
             player.hooked?.destroy()
             player.hooked = undefined
         })
