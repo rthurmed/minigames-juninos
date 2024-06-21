@@ -16,5 +16,13 @@ export const addBackButton = (k: KaboomCtx) => {
         k.go("main")
     })
 
+    backButton.onHover(() => {
+        k.setCursor("pointer")
+    })
+
+    backButton.onHoverEnd(() => {
+        k.setCursor("auto")
+    })
+
     return backButton
 }
