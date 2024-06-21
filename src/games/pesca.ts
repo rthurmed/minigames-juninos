@@ -23,6 +23,7 @@ export const makeScenePesca = (k: KaboomCtx) => () => {
         k.timer()
     ])
 
+    k.setCursor("auto")
     k.setBackground(k.Color.fromHex("#3898ff"))
 
     // HUD

@@ -28,6 +28,7 @@ export const makeScenePalhaco = (k: KaboomCtx) => () => {
         k.timer(),
     ])
 
+	k.setCursor("auto")
     k.setBackground(k.Color.fromHex("#ffbf36"))
 
     // HUD

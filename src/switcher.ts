@@ -1,30 +1,55 @@
 import { KaboomCtx } from "kaplay";
+import { config } from "./config";
 
-export const makeSceneSwitcher = (k: KaboomCtx, scenes: string[]) => () => {
+const SPACING = 48
+
+interface SceneInfo {
+	scene: string,
+	title: string
+}
+
+export const makeSceneSwitcher = (k: KaboomCtx) => () => {
 	const t = k.add([
-		k.pos(k.center()),
+		k.pos(k.center().add(0, -SPACING)),
 		k.anchor("center"),
 		k.text("MiniGames Juninos", {
-			font: "kitchensink"
+			font: "kitchensink",
+			size: 48
 		})
 	])
-	
-	const sceneSwitcher = k.add([
-		k.pos(16, k.height() - 16),
-		k.anchor("botleft"),
-		k.z(20)
-	])
+
+	const scenes: SceneInfo[] = [{
+		scene: "palhaco",
+		title: "Boca de palhaço"
+	}, {
+		scene: "pesca",
+		title: "Pesca competitiva"
+	}, {
+		scene: "ovo",
+		title: "Corrida do ovo"
+	}]
+
+	const start = k.vec2(config.PADDING, k.height() / 2 + SPACING * 2)
 	
 	for (let i = 0; i < scenes.length; i++) {
-		const scene = scenes[i];
-		const button = sceneSwitcher.add([
-			k.pos(i * (16 + 4), -16),
-			k.rect(16, 16),
-			k.color(k.WHITE),
-			k.area()
+		const info = scenes[i];
+		const button = k.add([
+			k.pos(start.add(0, i * SPACING)),
+			k.anchor("left"),
+			k.text(info.title, {
+				font: "kitchensink",
+				align: "left"
+			}),
+			k.area(),
 		])
 		button.onClick(() => {
-			k.go(scene)
+			k.go(info.scene)
+		})
+		button.onHover(() => {
+			k.setCursor("pointer")
+		})
+		button.onHoverEnd(() => {
+			k.setCursor("auto")
 		})
 	}
 }

@@ -12,6 +12,7 @@ export const makeSceneOvo = (k: KaboomCtx) => () => {
         k.timer()
     ])
 
+    k.setCursor("auto")
     k.setBackground(k.Color.fromHex("#e14141"))
 
     // HUD

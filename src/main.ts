@@ -57,10 +57,6 @@ k.scene("palhaco", makeScenePalhaco(k))
 k.scene("burro", makeSceneBurro(k))
 k.scene("ovo", makeSceneOvo(k))
 k.scene("pesca", makeScenePesca(k))
-k.scene("main", makeSceneSwitcher(k, [
-	"palhaco",
-	"pesca",
-	"ovo"
-]))
+k.scene("main", makeSceneSwitcher(k))
 
-k.go("pesca")
+k.go("main")
