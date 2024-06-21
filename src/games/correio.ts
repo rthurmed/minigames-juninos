@@ -15,6 +15,14 @@ export const makeCorreioScene = (k: KaboomCtx) => () => {
     // HUD
     const backButton = addBackButton(k)
 
+    const voices = speechSynthesis.getVoices().filter(e => {
+        const name = e.name.toLowerCase()
+        return name.includes("brazil") && !name.includes("whisper")
+    })
+    if (voices.length === 0) {
+        return
+    }
+
     const player = game.add([
         {
             text: ''
@@ -35,11 +43,20 @@ export const makeCorreioScene = (k: KaboomCtx) => () => {
     }
 
     game.onKeyPressRepeat((key) => {
-        const ignored: Key[] = ['tab', 'shift', 'control', 'alt', 'enter', 'meta', 'up', 'left', 'right', 'down', 'escape', 'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9', 'f10', 'f11', 'f12']
+        const ignored: Key[] = ['tab', 'shift', 'control', 'alt', 'meta', 'up', 'left', 'right', 'down', 'escape', 'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9', 'f10', 'f11', 'f12']
         if (ignored.includes(key)) {
             return
         }
-        if (key == 'backspace') {
+        if (key === 'enter') {
+            const message = new SpeechSynthesisUtterance();
+            message.voice = k.choose(voices)
+            message.text = player.text
+            message.lang = 'pt-br'
+            speechSynthesis.speak(message)
+            setText('')
+            return
+        }
+        if (key === 'backspace') {
             setText(player.text.slice(0, player.text.length - 1))
             return
         }
