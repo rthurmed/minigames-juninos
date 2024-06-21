@@ -5,6 +5,7 @@ import { makeSceneBurro } from "./games/burro"
 import { makeSceneOvo } from "./games/ovo"
 import { makeScenePesca } from "./games/pesca"
 import { makeSceneSwitcher } from "./switcher"
+import { makeCorreioScene } from "./games/correio"
 
 const k = startGame({
 	width: config.GAME_WIDTH,
@@ -52,11 +53,12 @@ k.loadSprite("fish", "sprites/fish-Sheet.png", {
 	sliceY: 1
 })
 
-
 k.scene("palhaco", makeScenePalhaco(k))
 k.scene("burro", makeSceneBurro(k))
 k.scene("ovo", makeSceneOvo(k))
 k.scene("pesca", makeScenePesca(k))
+k.scene("correio", makeCorreioScene(k))
+
 k.scene("main", makeSceneSwitcher(k))
 
 k.go("main")

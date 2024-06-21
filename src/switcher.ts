@@ -27,6 +27,9 @@ export const makeSceneSwitcher = (k: KaboomCtx) => () => {
 	}, {
 		scene: "ovo",
 		title: "Corrida do ovo"
+	}, {
+		scene: "correio",
+		title: "Correio elegante"
 	}]
 
 	const start = k.vec2(config.PADDING, k.height() / 2 + SPACING * 2)
