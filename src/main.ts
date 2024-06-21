@@ -47,7 +47,7 @@ k.loadSprite("clown", "sprites/clown-Sheet.png", {
 k.loadSprite("fish-box", "sprites/fish-box.png")
 k.loadSprite("fish-hook", "sprites/fish-hook.png")
 k.loadSprite("fish-cursor", "sprites/fish-cursor.png")
-k.loadSprite("fish-fish", "sprites/fish-fish.png", {
+k.loadSprite("fish", "sprites/fish-Sheet.png", {
 	sliceX: 5,
 	sliceY: 1
 })
@@ -63,4 +63,4 @@ k.scene("main", makeSceneSwitcher(k, [
 	"ovo"
 ]))
 
-k.go("main")
+k.go("pesca")

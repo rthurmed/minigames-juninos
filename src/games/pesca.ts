@@ -1,4 +1,4 @@
-import { KaboomCtx, Vec2 } from "kaplay"
+import { AnchorComp, AreaComp, GameObj, KaboomCtx, PosComp, SpriteComp, Vec2, ZComp } from "kaplay"
 import { config } from "../config"
 import { addBackButton } from "../gui/backButton"
 
@@ -7,10 +7,16 @@ const CURSOR_RADIUS = 4
 const CURSOR_SPEED = 4
 const CURSOR_PADDING = 16
 const CURSOR_MIN_Y = CURSOR_PADDING
-const CURSOR_MAX_Y = config.GAME_HEIGHT - CURSOR_PADDING
+const CURSOR_MAX_Y = config.GAME_HEIGHT / 2 + 32
 const CURSOR_MIN_X = CURSOR_PADDING
 const CURSOR_MAX_X = config.GAME_WIDTH - CURSOR_PADDING
-const TAIL_MOVING_TIME = 3
+const HOOK_MOVING_TIME = 3
+const HOOK_MIN_DISTANCE = 8 * config.SPRITE_SCALE
+const Z_FISH = 10
+const Z_HOOK = 50
+const Z_DEBUG = 100
+
+type FishObj = GameObj<SpriteComp | PosComp | AnchorComp | ZComp | AreaComp | { hookPoint: Vec2; }>
 
 export const makeScenePesca = (k: KaboomCtx) => () => {
     const game = k.add([
@@ -23,9 +29,13 @@ export const makeScenePesca = (k: KaboomCtx) => () => {
     const backButton = addBackButton(k)
 
     const player = k.add([
-        k.state("vertical", ["vertical", "horizontal", "moving", "ended"]),
+        k.state("vertical", ["vertical", "horizontal", "moving", "pulling", "ended"]),
         {
-            target: k.vec2()
+            target: k.vec2(),
+            hooked: undefined
+        } as {
+            target: Vec2,
+            hooked?: FishObj
         }
     ])
 
@@ -43,43 +53,87 @@ export const makeScenePesca = (k: KaboomCtx) => () => {
         k.anchor("center"),
         k.circle(POINT_RADIUS),
         k.color(k.BLACK),
-        k.z(2)
+        k.z(Z_DEBUG)
     ])
 
+    const hookInitialPos = k.vec2(k.width()/2, -40 * config.SPRITE_SCALE)
     const hook = game.add([
         k.sprite("fish-hook", {
             width: 24 * config.SPRITE_SCALE,
             height: 112 * config.SPRITE_SCALE
         }),
-        k.pos(k.width()/2, - 16),
+        k.pos(hookInitialPos),
         k.anchor("bot"),
-        k.z(0)
+        k.z(Z_HOOK)
     ])
 
-    // const hookPoint = hook.add([
-    //     k.pos(),
-    //     k.anchor("center"),
-    //     k.circle(POINT_RADIUS),
-    //     k.color(k.BLACK),
-    //     k.z(0)
-    // ])
+    const hookPoint = hook.add([
+        k.pos(2 * config.SPRITE_SCALE, -5 * config.SPRITE_SCALE),
+        k.z(Z_DEBUG)
+    ])
+
+    const oneTile = k.vec2(16, 16).scale(config.SPRITE_SCALE)
+    const initialOffset = oneTile.add(0, 16 * 2 * config.SPRITE_SCALE)
+    const fishHookOffset = k.vec2(8 * config.SPRITE_SCALE, -33 * config.SPRITE_SCALE)
+    const columns = 6
+    const rows = 3
+    const fishes: FishObj[] = []
+
+    const addFish = (tile: Vec2) => {
+        const worldPosition = oneTile.scale(tile).add(initialOffset)
+        const hookPoint = worldPosition.add(fishHookOffset)
+        const fish = game.add([
+            k.sprite("fish", {
+                frame: k.randi(5),
+                height: 40 * config.SPRITE_SCALE,
+                width: 80 / 5 * config.SPRITE_SCALE
+            }),
+            k.anchor("botleft"),
+            k.area(),
+            k.pos(worldPosition),
+            k.z(Z_FISH + tile.y),
+            {
+                hookPoint: hookPoint,
+            }
+        ])
+        return fish
+    }
+
+    for (let x = 0; x < columns; x++) {
+        for (let y = 0; y < rows; y++) {
+            const fish = addFish(k.vec2(x, y))
+            fishes.push(fish)
+        }
+    }
+
+    const verticalCursor = game.add([
+        k.sprite("fish-cursor", {
+            height: 11 * config.SPRITE_SCALE,
+            width: 16 * config.SPRITE_SCALE
+        }),
+        k.anchor("left"),
+        k.pos(CURSOR_PADDING, CURSOR_MIN_Y),
+    ])
+    const horizontalCursor = game.add([
+        k.sprite("fish-cursor", {
+            height: 11 * config.SPRITE_SCALE,
+            width: 16 * config.SPRITE_SCALE
+        }),
+        k.rotate(-90),
+        k.anchor("left"),
+        k.pos(CURSOR_MIN_X, k.height() - CURSOR_PADDING)
+    ])
 
     player.onStateEnter("vertical", () => {
         let direction = 1
-        const cursor = game.add([
-            k.pos(CURSOR_PADDING, CURSOR_MIN_Y),
-            k.anchor("center"),
-            k.circle(CURSOR_RADIUS),
-            k.color(k.RED)
-        ])
         const movement = game.onUpdate(() => {
-            cursor.moveBy(k.DOWN.scale(CURSOR_SPEED * direction))
-            if (cursor.pos.y >= CURSOR_MAX_Y || cursor.pos.y <= CURSOR_MIN_Y) {
+            verticalCursor.moveBy(k.DOWN.scale(CURSOR_SPEED * direction))
+            if (verticalCursor.pos.y >= CURSOR_MAX_Y || verticalCursor.pos.y <= CURSOR_MIN_Y) {
                 direction = direction * -1
             }
         })
         const input = game.onKeyRelease("space", () => {
-            player.target.y = cursor.pos.y
+            player.target.y = verticalCursor.pos.y
             player.enterState("horizontal")
             movement.cancel()
             input.cancel()
@@ -88,20 +142,14 @@ export const makeScenePesca = (k: KaboomCtx) => () => {
 
     player.onStateEnter("horizontal", () => {
         let direction = 1
-        const cursor = game.add([
-            k.pos(CURSOR_MIN_X, k.height() - CURSOR_PADDING),
-            k.anchor("center"),
-            k.circle(CURSOR_RADIUS),
-            k.color(k.RED)
-        ])
         const movement = game.onUpdate(() => {
-            cursor.moveBy(k.RIGHT.scale(CURSOR_SPEED * direction))
-            if (cursor.pos.x >= CURSOR_MAX_X || cursor.pos.x <= CURSOR_MIN_X) {
+            horizontalCursor.moveBy(k.RIGHT.scale(CURSOR_SPEED * direction))
+            if (horizontalCursor.pos.x >= CURSOR_MAX_X || horizontalCursor.pos.x <= CURSOR_MIN_X) {
                 direction = direction * -1
             }
         })
         const input = game.onKeyDown("space", () => {
-            player.target.x = cursor.pos.x
+            player.target.x = horizontalCursor.pos.x
             player.enterState("moving")
             movement.cancel()
             input.cancel()
@@ -109,14 +157,58 @@ export const makeScenePesca = (k: KaboomCtx) => () => {
     })
 
     player.onStateEnter("moving", () => {
-        game.tween(
+        const tween = game.tween(
             hook.pos,
             player.target,
-            TAIL_MOVING_TIME,
+            HOOK_MOVING_TIME,
             (value) => {
                 hook.pos = value
             },
             k.easings.easeInOutElastic
         )
-    }) 
+        tween.onEnd(() => {
+            for (let i = 0; i < fishes.length; i++) {
+                const fish = fishes[i];
+                const distance = fish.hookPoint.dist(player.target)
+                if (distance < HOOK_MIN_DISTANCE) {
+                    player.hooked = fish
+                    break
+                }
+            }
+            if (player.hooked !== undefined) {
+                player.enterState("pulling")
+            } else {
+                hook.pos = hookInitialPos
+                k.shake(10)
+                player.enterState("vertical")
+            }
+        })
+    })
+
+    player.onStateEnter("pulling", () => {
+        let lastPos = hook.pos
+        let moveDelta = k.vec2()
+        const tween = game.tween(
+            hook.pos,
+            hookInitialPos,
+            HOOK_MOVING_TIME,
+            (value) => {
+                moveDelta = value.sub(lastPos)
+                lastPos = value
+
+                hook.pos = value
+                
+                if (player.hooked !== undefined) {
+                    // player.hooked.pos = value.add(fishHookOffset)
+                    player.hooked.pos = player.hooked.pos.add(moveDelta)
+                }
+            },
+            k.easings.easeOutElastic
+        )
+        tween.onEnd(() => {
+            player.enterState("vertical")
+            player.hooked?.destroy()
+            player.hooked = undefined
+        })
+    })
 }
