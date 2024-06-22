@@ -1,7 +1,6 @@
-# Folder structure
+# Minigames Juninos
 
-- `src` - source code for your kaplay project
-- `www` - distribution folder, contains your index.html, built js bundle and static assets
+[![Deploy static content to Pages](https://github.com/rthurmed/minigames-juninos/actions/workflows/gh-pages.yml/badge.svg)](https://github.com/rthurmed/minigames-juninos/actions/workflows/gh-pages.yml)
 
 ## Development
 
