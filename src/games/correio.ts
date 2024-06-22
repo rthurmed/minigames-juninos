@@ -53,6 +53,7 @@ export const makeCorreioScene = (k: KaboomCtx) => () => {
             message.voice = k.choose(voices)
             message.text = player.text
             message.lang = 'pt-br'
+            message.pitch = k.rand(0, 2)
             speechSynthesis.speak(message)
             setText('')
             k.play("success", randPitch(k))
