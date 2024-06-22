@@ -53,6 +53,15 @@ k.loadSprite("fish", "sprites/fish-Sheet.png", {
 	sliceY: 1
 })
 
+k.loadSound("blip", "sounds/blip.wav")
+k.loadSound("fail", "sounds/fail.wav")
+k.loadSound("success", "sounds/success.wav")
+k.loadSound("egg-break", "sounds/egg-break.wav")
+k.loadSound("fish-fail", "sounds/fish-fail.wav")
+k.loadSound("fish-heeling", "sounds/fish-heeling.wav")
+k.loadSound("palhaco-fail", "sounds/palhaco-fail.wav")
+k.loadSound("palhaco-throw", "sounds/palhaco-throw.wav")
+
 k.scene("palhaco", makeScenePalhaco(k))
 k.scene("burro", makeSceneBurro(k))
 k.scene("ovo", makeSceneOvo(k))

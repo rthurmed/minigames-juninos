@@ -74,6 +74,7 @@ export const makeSceneOvo = (k: KaboomCtx) => () => {
             k.easings.easeInCirc
         )
         tween.onEnd(() => {
+            k.play("egg-break")
             player.enterState("walk")
         })
     })

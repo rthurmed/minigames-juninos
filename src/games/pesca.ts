@@ -1,6 +1,7 @@
 import { AnchorComp, AreaComp, GameObj, KaboomCtx, PosComp, SpriteComp, Vec2, ZComp } from "kaplay"
 import { config } from "../config"
 import { addBackButton } from "../gui/backButton"
+import { randPitch } from "../util"
 
 const POINT_RADIUS = 4
 const CURSOR_RADIUS = 4
@@ -215,12 +216,15 @@ export const makeScenePesca = (k: KaboomCtx) => () => {
             } else {
                 hook.pos = hookInitialPos
                 k.shake(10)
+                k.play("fish-fail", randPitch(k))
                 player.enterState("vertical")
             }
         })
     })
 
     player.onStateEnter("pulling", () => {
+        k.play("fish-heeling", randPitch(k))
+
         let lastPos = hook.pos
         let moveDelta = k.vec2()
         const tween = game.tween(
@@ -250,6 +254,7 @@ export const makeScenePesca = (k: KaboomCtx) => () => {
                 labelPointsP2.text = `${player.pointsP2} P2`
             }
 
+            k.play("success", randPitch(k))
             player.enterState("vertical")
             
             player.hooked?.destroy()

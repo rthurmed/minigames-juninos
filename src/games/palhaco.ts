@@ -1,6 +1,7 @@
 import { KaboomCtx } from "kaplay"
 import { config } from "../config"
 import { addBackButton } from "../gui/backButton"
+import { randPitch } from "../util"
 
 const { PADDING, HUD_Z } = config
 
@@ -145,6 +146,8 @@ export const makeScenePalhaco = (k: KaboomCtx) => () => {
     })
     
     player.onStateEnter("pull", () => {
+        k.play("blip", randPitch(k))
+
         let direction = 1
         const update = game.onUpdate(() => {
             strength.setValue(strength.getValue() + BALL_STRENGTH_CHANGE_SPEED * direction * k.dt())
@@ -160,6 +163,8 @@ export const makeScenePalhaco = (k: KaboomCtx) => () => {
     })
     
     player.onStateEnter("fly", () => {
+        k.play("palhaco-throw", randPitch(k))
+
         const target = k.height() * (1 - strength.getValue())
         const moveTween = game.tween(
             player.ball.pos.y,
@@ -189,6 +194,8 @@ export const makeScenePalhaco = (k: KaboomCtx) => () => {
     })
     
     player.onStateEnter("fall", () => {
+        k.play("palhaco-fail", randPitch(k))
+
         k.shake(10)
         const update = game.onUpdate(() => {
             player.ball.moveBy(0, GRAVITY)
@@ -200,6 +207,8 @@ export const makeScenePalhaco = (k: KaboomCtx) => () => {
     })
     
     player.onStateEnter("success", () => {
+        k.play("success", randPitch(k))
+
         player.ball.z = 1
         const update = game.onUpdate(() => {
             player.ball.moveBy(0, GRAVITY)

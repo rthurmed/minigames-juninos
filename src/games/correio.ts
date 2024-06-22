@@ -1,6 +1,7 @@
 import { KaboomCtx, Key } from "kaplay";
 import { config } from "../config";
 import { addBackButton } from "../gui/backButton";
+import { randPitch } from "../util";
 
 const MESSAGE_MAX_LENGTH = 200
 
@@ -54,19 +55,25 @@ export const makeCorreioScene = (k: KaboomCtx) => () => {
             message.lang = 'pt-br'
             speechSynthesis.speak(message)
             setText('')
+            k.play("success", randPitch(k))
             return
         }
+        k.shake(1)
         if (key === 'backspace') {
             setText(player.text.slice(0, player.text.length - 1))
+            k.play("fail", randPitch(k))
             return
         }
         if (player.text.length >= MESSAGE_MAX_LENGTH) {
+            k.play("fail", randPitch(k))
             return
         }
         if (key == 'space') {
             setText(player.text + ' ')
+            k.play("blip", randPitch(k))
             return 
         }
         setText(player.text + key)
+        k.play("blip", randPitch(k))
     })
 }
